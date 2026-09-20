@@ -11,64 +11,75 @@ public class Main {
                 "\nApplication started. No configuration requested yet."
         );
 
-        // First call creates the Singleton.
-        System.out.println(
-                "\nRequesting first instance..."
-        );
+        // First request creates the Singleton.
+        System.out.println("\nRequesting first instance...");
 
         ConfigurationManager config1 =
                 ConfigurationManager.getInstance();
 
-        // Second call should reuse the same instance.
-        System.out.println(
-                "\nRequesting second instance..."
-        );
+        // Second request reuses the same instance.
+        System.out.println("\nRequesting second instance...");
 
         ConfigurationManager config2 =
                 ConfigurationManager.getInstance();
 
-        // Verify reference equality.
+        // Verify both references point to the same object.
         System.out.println(
-                "\nAre both instances the same?"
+                "\nAre both instances the same? "
+                        + (config1 == config2)
         );
 
-        System.out.println(config1 == config2);
-
-        // Display initial settings.
-        System.out.println("\nInitial Settings:");
-
-        System.out.println(
-                "Volume: " + config1.getVolume()
-        );
-
-        System.out.println(
-                "Resolution: " + config1.getResolution()
-        );
-
-        System.out.println(
-                "Fullscreen: " + config1.isFullscreen()
-        );
-
-        // Modify settings through the first reference.
+        // Verify shared configuration state.
         config1.setVolume(80);
         config1.setResolution("2560x1440");
         config1.setFullscreen(true);
 
-        // Read the changes through the second reference.
-        System.out.println("\nSettings After Changes:");
+        System.out.println("\nShared Configuration Test:");
 
         System.out.println(
-                "Volume: " + config2.getVolume()
+                "Volume from config2: "
+                        + config2.getVolume()
         );
 
         System.out.println(
-                "Resolution: " + config2.getResolution()
+                "Resolution from config2: "
+                        + config2.getResolution()
         );
 
         System.out.println(
-                "Fullscreen: " + config2.isFullscreen()
+                "Fullscreen from config2: "
+                        + config2.isFullscreen()
         );
 
-        System.out.println("\nPhase 2 Complete!");
+        // Create independent game subsystems.
+        AudioSystem audio = new AudioSystem();
+
+        GraphicsRenderer graphics = new GraphicsRenderer();
+
+        System.out.println("\n=== Initial Subsystem Status ===");
+
+        audio.playSound();
+        graphics.renderFrame();
+
+        // Modify shared state through AudioSystem.
+        System.out.println("\n=== Changing Volume ===");
+
+        audio.adjustVolume(35);
+
+        // Both subsystems should see the new value.
+        System.out.println("\n=== Updated Subsystem Status ===");
+
+        audio.playSound();
+        graphics.renderFrame();
+
+        // Modify graphics settings through main.
+        System.out.println("\n=== Changing Graphics Settings ===");
+
+        config1.setResolution("1280x720");
+        config1.setFullscreen(false);
+
+        graphics.renderFrame();
+
+        System.out.println("\nPhase 3 Complete!");
     }
 }
