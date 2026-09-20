@@ -55,3 +55,25 @@ I created both subsystems and verified that they could read the shared settings.
 **Challenges:**
 
 The main challenge was understanding how two separate subsystem objects could share the same configuration without receiving it through their constructors. Using getInstance() inside each subsystem helped demonstrate how the Singleton provides access to shared state.
+
+## Phase 4: Interactive Engine Console
+
+**What convenience did the Singleton provide when connecting multiple subsystems to a shared configuration?**
+
+The Singleton made it easy for my AudioSystem and GraphicsRenderer to access the same configuration settings. Each subsystem could call getInstance() without needing a ConfigurationManager object passed into its constructor. When I changed the volume or resolution through the console, the subsystems immediately used the updated settings because they shared the same instance.
+
+**Considering both convenience and drawbacks, when is a Singleton appropriate, and when might Dependency Injection be a better choice?**
+
+I think a Singleton can be useful when an application genuinely needs one shared instance, such as a central configuration manager. It provides a consistent place for different parts of the application to access settings.
+
+However, the Singleton also creates global state and hidden dependencies. This can make testing harder because one test might change settings that affect another test. The subsystems are also directly coupled to ConfigurationManager.
+
+Dependency Injection would be a better choice if I needed to test the subsystems independently or replace the configuration manager with a different implementation. Passing the dependency through a constructor makes it clear what each class requires and gives the application more flexibility.
+
+**Testing:**
+
+I created an interactive console using Scanner, a while loop, and switch statements. I tested viewing the configuration, changing the volume and resolution, toggling fullscreen, and triggering the audio and graphics systems. I verified that both subsystems used the updated settings. I also tested invalid menu input and confirmed that the application could exit cleanly.
+
+**Challenges:**
+
+The main challenge was organizing the menu so it could handle different user choices without stopping unexpectedly. Using a loop, switch statements, and input validation helped keep the program running until the user selected Exit.
